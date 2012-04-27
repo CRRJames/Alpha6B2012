@@ -30,7 +30,7 @@ import edu.wpi.first.wpilibj.image.NIVision.MeasurementType;
 //    
 //    Overrides
 //       Digital 5 - 12' shooter speed (Manual align and shoot)
-//       Digital 6
+//       Digital 6 
 //       Digital 7
 //       Digital 8 - ENABLE TOTALLY MANUAL SHOOTER SPEED USING Analog 1 (does both wheels)
 public class Alpha6 extends IterativeRobot {
