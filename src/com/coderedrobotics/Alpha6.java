@@ -1,3 +1,4 @@
+
 /*----------------------------------------------------------------------------*/
 /* Copyright (c) FIRST 2008. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
@@ -15,22 +16,23 @@ import edu.wpi.first.wpilibj.camera.AxisCamera;
 import edu.wpi.first.wpilibj.image.CriteriaCollection;
 import edu.wpi.first.wpilibj.image.NIVision.MeasurementType;
 
-// Controls: 
+//  Drivers Gamepad
 //    Left Bumper - start targeting   (Cancel by driving robot)
 //    Right Bumper - Shoot (hold until it shoots) 
-//    Left Trigger - Bridge up
-//    Right Trigger - Bridge down
+//    Left Trigger - Bridge down
+//    Right Trigger - Bridge up
 //
-//    Left joystick button - belts on
-//    Right joystick button - belts off
-//    Button A - reverse belts
+//  Manipulator Gamepad
+//      Button A - belts up
+//      Button B - belts reverse
+//      
 //
 //    Analog 4 - automatic shooter speed adjustment - start at 1.6 for no effect
 //               adjusts boths shooter wheel speeds
 //    
 //    Overrides
 //       Digital 5 - 12' shooter speed (Manual align and shoot)
-//       Digital 6 
+//       Digital 6
 //       Digital 7
 //       Digital 8 - ENABLE TOTALLY MANUAL SHOOTER SPEED USING Analog 1 (does both wheels)
 public class Alpha6 extends IterativeRobot {
@@ -51,12 +53,16 @@ public class Alpha6 extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-        System.out.println("ROBOT INITIALIZING!");
+        if (Globals.debugLevel > 0) {
+            System.out.println("ROBOT INITIALIZING!");
+        }
+
         try {
             myAxisCamera = AxisCamera.getInstance();  // get an instance ofthe camera
         } catch (Exception ex) {
             System.out.println("CAMERA - FAILED TO INITIALIZE");
         }
+
 
         drvGamepad = new Gamepad(Wiring.joystick1Port);
         manGamepad = new Gamepad(Wiring.joystick2Port);
@@ -67,7 +73,9 @@ public class Alpha6 extends IterativeRobot {
         myShooter = new Shooter(drive, Wiring.topShooterJag, Wiring.bottomShooterJag, manGamepad, myImage);
         targetingActive = false;
 
-        System.out.println("........INITIALIZED");
+        if (Globals.debugLevel > 0) {
+            System.out.println("........INITIALIZED");
+        }
     }
 
     /**
@@ -93,6 +101,7 @@ public class Alpha6 extends IterativeRobot {
                 drive.setRight(drvGamepad.getRightY() * Math.abs(drvGamepad.getRightY()));
             }
         }
+
         bridge.moveManipulator(drvGamepad.getTriggerAxis());
 
         if (drvGamepad.getButtonRightAnalogStick() && myShooter.isAligning()) {
@@ -127,8 +136,8 @@ public class Alpha6 extends IterativeRobot {
 
         if (manGamepad.getRawButton(11)) {
             myShooter.setOverride(6);//max power
-        } else if (manGamepad.getRawButton(6)) {
-            myShooter.setOverride(3);//16'
+        } else if (manGamepad.getRawButton(6)) {//short shot
+            myShooter.setOverride(3);//short shot
         } else if (manGamepad.getRawButton(10)) {
             myShooter.setOverride(5);//12'
         } else if (manGamepad.getRawButton(9)) {
@@ -157,7 +166,7 @@ public class Alpha6 extends IterativeRobot {
 //            myImage.SetTargetToBall();
 //        } else if (gamepad.getButtonX()) {
 //            myImage.SetTargetToBucket();
-//        }
+
     }
 
     /**

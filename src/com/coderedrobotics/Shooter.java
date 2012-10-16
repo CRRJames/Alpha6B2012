@@ -27,7 +27,7 @@ public class Shooter implements PIDSource {
     PIDController pidTop = null;
     PIDController pidBottom = null;
     Relay onTargetSignal;
-    PIDController pidGyro;
+    private PIDController pidGyro;
     Gyro gyro;
     BallRelease ballRelease;
     UltrasonicRangefinder ultrasonicRangefinder;
@@ -59,7 +59,7 @@ public class Shooter implements PIDSource {
         gyro = new Gyro(Wiring.gyroPort);
         gyro.reset();
         myDriveTrain = driveTrain;
-        pidGyro = new PIDController(0.2, 0, 0.28, this, driveTrain);
+        pidGyro = new PIDController(0.28, 0, 0.2, this, driveTrain);
         pidGyro.setOutputRange(-1, 1);
 
         encShooterTop = new SpeedEncoder(
@@ -116,7 +116,7 @@ public class Shooter implements PIDSource {
     public void setShooterSpeed() {
 
         if (override != 0) {
-            System.out.println("Override: " + override + "\tFudge: " + getFudgeFactor());
+            //  System.out.println("Override: " + override + "\tFudge: " + getFudgeFactor());
         }
 
         if (override == 5) { // 12' shot
@@ -125,8 +125,8 @@ public class Shooter implements PIDSource {
         } else if (override == 6) {
             tsp = 60;
             bsp = 60;
-        } else if (override == 3) {
-            tsp = 4;
+        } else if (override == 3) { // short shot to side basket
+            tsp = 7;
             bsp = 27;
         } else if (override == 8) { // auto shot 15'
             tsp = calcTopSpeed(18);
@@ -160,6 +160,9 @@ public class Shooter implements PIDSource {
             pidBottom.setSetpoint(bsp);
             jagShooterTop.setFailSpeed(-tsp / 23);
             jagShooterBottom.setFailSpeed(bsp / 33);
+            if (Globals.debugLevel > 0) {
+                System.out.println("Top Motor Voltage: " + jagShooterTop.getOutputVoltage() + "  Current: " + jagShooterTop.getOutputCurrent());
+            }
         } else {
             pidBottom.setSetpoint(0);
             pidTop.setSetpoint(0);
@@ -236,10 +239,6 @@ public class Shooter implements PIDSource {
     //----------------------------- Aligning Code ------------------------------
     //--------------------------------------------------------------------------
     public boolean isAligning() {
-        
-        
-        
-        
         return isAligning;
     }
 
@@ -257,7 +256,9 @@ public class Shooter implements PIDSource {
     public void autoAlignStart() {
         isAligning = true;
         imageObject.requestImage(getGyroAngle());
-        System.out.println("Targeting ACTIVE - Joystick DISABLED");
+        if (Globals.debugLevel > 0) {
+            System.out.println("Targeting ACTIVE - Joystick DISABLED");
+        }
     }
 
     /**
@@ -275,7 +276,9 @@ public class Shooter implements PIDSource {
         if (imageObject.isReady()) {
             angle = imageObject.getAngle();
             cameraDistance = imageObject.getDistance();
-            System.out.println("Image found - particles: " + imageObject.ParticleCount() + "\tAngle change: " + (getGyroAngle() - angle) + "\tDistance: " + cameraDistance);
+            if (Globals.debugLevel > 0) {
+                System.out.println("Image found - particles: " + imageObject.ParticleCount() + "\tAngle change: " + (getGyroAngle() - angle) + "\tDistance: " + cameraDistance);
+            }
         }
         if (angle != 0) {
             pidGyro.setSetpoint(angle);

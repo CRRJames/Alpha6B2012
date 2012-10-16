@@ -4,9 +4,11 @@
  */
 package com.coderedrobotics;
 
+import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.can.CANTimeoutException;
 
 /**
  * Class which controls the rotating ball release mechanism.
@@ -23,7 +25,7 @@ public class BallRelease {
     /**
      * Class which controls the rotating ball release mechanism.
      */
-    public BallRelease() {
+    public BallRelease()  {
 //        sensorC = new DigitalInput(Wiring.sensorCChannel);
         jaguar = new SafeJaguar(Wiring.ballReleaseJag);
 //        encoder = new Encoder(Wiring.ballReleaseEncoderA,
@@ -38,8 +40,9 @@ public class BallRelease {
     /**
      * Release the Kraken!
      */
-    public void SpinBallRelease() {
+    public void SpinBallRelease()   {
         jaguar.set(1);
+        System.out.println("SPIN BALL RELEASE");
 //        pid.enable();
 //        Rotate(180);
 //        double startTime = System.currentTimeMillis();
@@ -47,8 +50,9 @@ public class BallRelease {
 //            jaguar.set(-0.5);
 //        }
     }
-    public void StopBallRelease() {
+    public void StopBallRelease()   {
         jaguar.set(0);
+        //System.out.println("STOP BALL RELEASE ");
     }
    
     /**

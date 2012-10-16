@@ -42,7 +42,9 @@ public class ImageObject implements Runnable {
         cc.addCriteria(MeasurementType.IMAQ_MT_BOUNDING_RECT_HEIGHT, 40, 400, false);
         targetType = TARGET_IS_BUCKET;
         thread.start();
-        System.out.println("IMAGE THREAD STARTED " + thread.toString());
+        if (Globals.debugLevel > 0) {
+            System.out.println("IMAGE THREAD STARTED " + thread.toString());
+        }
     }
 
     public void run() {
@@ -50,7 +52,9 @@ public class ImageObject implements Runnable {
 
             if (getingImage) {
                 SetTargetToBucket();
-                System.out.println("getting image");
+                if (Globals.debugLevel > 0) {
+                    System.out.println("getting image");
+                }
                 GetImage();
                 //  System.out.println("Image Acquisition Time: " + GetAcquisitionTime());
                 if (ParticleCount() > 0) {
@@ -64,7 +68,9 @@ public class ImageObject implements Runnable {
                     this.angle = angle;
                     distance = GetDistance();
 
-                    System.out.println("Target Gyro: " + angle + "  Current Gyro: " + gyroReading + "  Distance: " + GetDistance());
+                    if (Globals.debugLevel > 0) {
+                        System.out.println("Target Gyro: " + angle + "  Current Gyro: " + gyroReading + "  Distance: " + GetDistance());
+                    }
 
                     getingImage = false;
                     imageReady = true;
@@ -175,7 +181,7 @@ public class ImageObject implements Runnable {
         servoCameraPan.set(.5);
         servoCameraTilt.set(.5);
 
-        System.out.println("TARGET SET TO BALL: TiltServo: " + servoCameraTilt.get() + "   PAN: " + servoCameraPan.get());
+        //  System.out.println("TARGET SET TO BALL: TiltServo: " + servoCameraTilt.get() + "   PAN: " + servoCameraPan.get());
 
     }
 
@@ -183,7 +189,7 @@ public class ImageObject implements Runnable {
         targetType = TARGET_IS_BUCKET;
         servoCameraPan.set(.5);
         servoCameraTilt.set(.5);
-        System.out.println("TARGET SET TO BUCKET: TiltServo: " + servoCameraTilt.get() + "   PAN: " + servoCameraPan.get());
+        //   System.out.println("TARGET SET TO BUCKET: TiltServo: " + servoCameraTilt.get() + "   PAN: " + servoCameraPan.get());
     }
 
     private double GetDistance() {

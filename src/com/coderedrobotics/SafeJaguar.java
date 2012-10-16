@@ -79,6 +79,22 @@ public class SafeJaguar implements PIDOutput {
         relative = true;
     }
 
+    public double getOutputCurrent()  {
+        try {
+            return jaguar.getOutputCurrent();
+        } catch (CANTimeoutException ex) {
+            System.out.println("CAN Exception in getOutputCurrent");
+        }
+        return 0;
+    }
+    public double getOutputVoltage()  {
+        try {
+            return jaguar.getOutputVoltage();
+        } catch (CANTimeoutException ex) {
+            System.out.println("CAN Exception in getOutputVoltage");
+        }
+        return 0;
+    }
     /**
      * Sets the jaguar to assign speeds solely from the outputs from the PID
      * controller. Relative mode is default.
